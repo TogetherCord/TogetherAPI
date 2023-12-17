@@ -33,5 +33,6 @@ Route.group(() => {
   Route.post('/containers/start', 'ContainersController.start');
   Route.post('/containers/restart', 'ContainersController.restart');
   Route.post('/containers/status', 'ContainersController.status');
+  Route.post('/containers/execute', 'ContainersController.execute')
 }).prefix('/instance')
 

@@ -228,4 +228,35 @@ export default class ContainersController {
       seconds: seconds
     };
   }
+
+  public async execute({ request }: HttpContextContract) {
+    const discordId = request.input('discordId');
+    const action = request.input('action');
+    if (!discordId || !action) {
+      return { status: 'error', message: 'ID Discord ou action non fourni' };
+    }
+
+    const containerName = `TogetherSelf-${discordId}`;
+
+    const containers = await docker.listContainers({ all: true });
+    const existingContainer = containers.find(container => container.Names && container.Names.includes('/' + containerName));
+
+    if (!existingContainer) {
+      return { status: 'error', message: 'Aucun conteneur avec ce nom n\'existe' };
+    }
+
+    try {
+      const Redis = require('ioredis');
+      const redis = new Redis({
+        host: 'localhost',
+        port: 6379
+      });
+      redis.publish('channel-' + discordId, action);
+
+      return { status: 'success', message: 'Action exécutée avec succès' };
+    } catch (error) {
+      console.error(error);
+      return { status: 'error', message: 'Erreur lors de l\'exécution de l\'action' };
+    }
+  }
 }
