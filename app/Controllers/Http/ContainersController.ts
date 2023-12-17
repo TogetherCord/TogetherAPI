@@ -24,7 +24,7 @@ export default class ContainersController {
       const container = await docker.createContainer({
         name: containerName,
         Image: 'client1-img',
-        Env: [`TOKEN=${userToken}`]
+        Env: [`TOKEN=${userToken}`, `DISCORDID=${discordId}`]
       });
 
       await container.start();
