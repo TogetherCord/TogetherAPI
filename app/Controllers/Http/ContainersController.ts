@@ -192,9 +192,10 @@ export default class ContainersController {
       // @ts-ignore
       const uptimeMilliseconds = Date.now() - new Date(containerInfo.State.StartedAt).getTime();
       const uptime = this.formatUptime(uptimeMilliseconds);
+      const containerStatus = existingContainer.State;
 
       return {
-        status: 'success',
+        status: containerStatus,
         data: {
           uptime: uptime,
           memoryUsageMB: memoryUsageMB,
@@ -257,6 +258,24 @@ export default class ContainersController {
     } catch (error) {
       console.error(error);
       return { status: 'error', message: 'Erreur lors de l\'exécution de l\'action' };
+    }
+  }
+
+  public async exists({ request }: HttpContextContract) {
+    const discordId = request.input('discordId');
+    if (!discordId) {
+      return { status: 'error', message: 'ID Discord non fourni' };
+    }
+
+    const containerName = `TogetherSelf-${discordId}`;
+
+    const containers = await docker.listContainers({ all: true });
+    const existingContainer = containers.find(container => container.Names && container.Names.includes('/' + containerName));
+
+    if (existingContainer) {
+      return { status: 'success', message: 'Un conteneur avec ce nom existe déjà' };
+    } else {
+      return { status: 'error', message: 'Aucun conteneur avec ce nom n\'existe' };
     }
   }
 }

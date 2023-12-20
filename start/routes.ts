@@ -34,5 +34,6 @@ Route.group(() => {
   Route.post('/containers/restart', 'ContainersController.restart');
   Route.post('/containers/status', 'ContainersController.status');
   Route.post('/containers/execute', 'ContainersController.execute')
+  Route.post('/containers/exists', 'ContainersController.exists')
 }).prefix('/instance')
 
