@@ -278,4 +278,15 @@ export default class ContainersController {
       return { status: 'error', message: 'Aucun conteneur avec ce nom n\'existe' };
     }
   }
+
+  public async listconnected() {
+    const Redis = require('ioredis');
+    const redis = new Redis({
+      host: 'localhost',
+      port: 6379
+    });
+    const keys = await redis.pubsub('channels', 'channel-*');
+    const connectedIds = keys.map(key => key.split('-')[1]);
+    return { status: 'success', message: 'Liste des utilisateurs connectés récupérée', data: connectedIds };
+  }
 }
