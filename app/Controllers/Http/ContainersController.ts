@@ -4,20 +4,20 @@ import Docker from 'dockerode';
 const docker = new Docker();
 
 export default class ContainersController {
-  public async create({ request }: HttpContextContract) {
+  public async create({request}: HttpContextContract) {
     const userToken = request.input('token');
     const discordId = request.input('discordId');
     if (!userToken || !discordId) {
-      return { status: 'error', message: 'Token ou ID Discord non fourni' };
+      return {status: 'error', message: 'Token ou ID Discord non fourni'};
     }
 
     const containerName = `TogetherSelf-${discordId}`;
 
-    const containers = await docker.listContainers({ all: true });
+    const containers = await docker.listContainers({all: true});
     const existingContainer = containers.find(container => container.Names && container.Names.includes('/' + containerName));
 
     if (existingContainer) {
-      return { status: 'error', message: 'Un conteneur avec le même nom existe déjà' };
+      return {status: 'error', message: 'Un conteneur avec le même nom existe déjà'};
     }
 
     try {
@@ -29,26 +29,26 @@ export default class ContainersController {
 
       await container.start();
 
-      return { status: 'success', message: 'Container créé et démarré avec succès' };
+      return {status: 'success', message: 'Container créé et démarré avec succès'};
     } catch (error) {
       console.error(error);
-      return { status: 'error', message: 'Erreur lors de la création ou du démarrage du conteneur' };
+      return {status: 'error', message: 'Erreur lors de la création ou du démarrage du conteneur'};
     }
   }
 
-  public async delete({ request }: HttpContextContract) {
+  public async delete({request}: HttpContextContract) {
     const discordId = request.input('discordId');
     if (!discordId) {
-      return { status: 'error', message: 'ID Discord non fourni' };
+      return {status: 'error', message: 'ID Discord non fourni'};
     }
 
     const containerName = `TogetherSelf-${discordId}`;
 
-    const containers = await docker.listContainers({ all: true });
+    const containers = await docker.listContainers({all: true});
     const existingContainer = containers.find(container => container.Names && container.Names.includes('/' + containerName));
 
     if (!existingContainer) {
-      return { status: 'error', message: 'Aucun conteneur avec ce nom n\'existe' };
+      return {status: 'error', message: 'Aucun conteneur avec ce nom n\'existe'};
     }
 
     try {
@@ -58,109 +58,109 @@ export default class ContainersController {
       }
       await container.remove();
 
-      return { status: 'success', message: 'Container arrêté et supprimé avec succès' };
+      return {status: 'success', message: 'Container arrêté et supprimé avec succès'};
     } catch (error) {
       console.error(error);
-      return { status: 'error', message: 'Erreur lors de l\'arrêt ou de la suppression du conteneur' };
+      return {status: 'error', message: 'Erreur lors de l\'arrêt ou de la suppression du conteneur'};
     }
   }
 
-  public async stop({ request }: HttpContextContract) {
+  public async stop({request}: HttpContextContract) {
     const discordId = request.input('discordId');
     if (!discordId) {
-      return { status: 'error', message: 'ID Discord non fourni' };
+      return {status: 'error', message: 'ID Discord non fourni'};
     }
 
     const containerName = `TogetherSelf-${discordId}`;
 
-    const containers = await docker.listContainers({ all: true });
+    const containers = await docker.listContainers({all: true});
     const existingContainer = containers.find(container => container.Names && container.Names.includes('/' + containerName));
 
     if (!existingContainer) {
-      return { status: 'error', message: 'Aucun conteneur avec ce nom n\'existe' };
+      return {status: 'error', message: 'Aucun conteneur avec ce nom n\'existe'};
     }
 
     try {
       const container = docker.getContainer(existingContainer.Id);
       if (existingContainer.State !== 'exited') {
-        await container.stop();
-        return { status: 'success', message: 'Container arrêté avec succès' };
+        await container.kill();
+        return {status: 'success', message: 'Container arrêté avec succès'};
       } else {
-        return { status: 'error', message: 'Le conteneur n\'est pas en cours d\'exécution' };
+        return {status: 'error', message: 'Le conteneur n\'est pas en cours d\'exécution'};
       }
     } catch (error) {
       console.error(error);
-      return { status: 'error', message: 'Erreur lors de l\'arrêt du conteneur' };
+      return {status: 'error', message: 'Erreur lors de l\'arrêt du conteneur'};
     }
   }
 
-  public async start({ request }: HttpContextContract) {
+  public async start({request}: HttpContextContract) {
     const discordId = request.input('discordId');
     if (!discordId) {
-      return { status: 'error', message: 'ID Discord non fourni' };
+      return {status: 'error', message: 'ID Discord non fourni'};
     }
 
     const containerName = `TogetherSelf-${discordId}`;
 
-    const containers = await docker.listContainers({ all: true });
+    const containers = await docker.listContainers({all: true});
     const existingContainer = containers.find(container => container.Names && container.Names.includes('/' + containerName));
 
     if (!existingContainer) {
-      return { status: 'error', message: 'Aucun conteneur avec ce nom n\'existe' };
+      return {status: 'error', message: 'Aucun conteneur avec ce nom n\'existe'};
     }
 
     try {
       const container = docker.getContainer(existingContainer.Id);
       if (existingContainer.State === 'exited') {
         await container.start();
-        return { status: 'success', message: 'Container démarré avec succès' };
+        return {status: 'success', message: 'Container démarré avec succès'};
       } else {
-        return { status: 'error', message: 'Le conteneur est déjà en cours d\'exécution' };
+        return {status: 'error', message: 'Le conteneur est déjà en cours d\'exécution'};
       }
     } catch (error) {
       console.error(error);
-      return { status: 'error', message: 'Erreur lors du démarrage du conteneur' };
+      return {status: 'error', message: 'Erreur lors du démarrage du conteneur'};
     }
   }
 
-  public async restart({ request }: HttpContextContract) {
+  public async restart({request}: HttpContextContract) {
     const discordId = request.input('discordId');
     if (!discordId) {
-      return { status: 'error', message: 'ID Discord non fourni' };
+      return {status: 'error', message: 'ID Discord non fourni'};
     }
 
     const containerName = `TogetherSelf-${discordId}`;
 
-    const containers = await docker.listContainers({ all: true });
+    const containers = await docker.listContainers({all: true});
     const existingContainer = containers.find(container => container.Names && container.Names.includes('/' + containerName));
 
     if (!existingContainer) {
-      return { status: 'error', message: 'Aucun conteneur avec ce nom n\'existe' };
+      return {status: 'error', message: 'Aucun conteneur avec ce nom n\'existe'};
     }
 
     try {
       const container = docker.getContainer(existingContainer.Id);
       await container.restart();
-      return { status: 'success', message: 'Container redémarré avec succès' };
+      return {status: 'success', message: 'Container redémarré avec succès'};
     } catch (error) {
       console.error(error);
-      return { status: 'error', message: 'Erreur lors du redémarrage du conteneur' };
+      return {status: 'error', message: 'Erreur lors du redémarrage du conteneur'};
     }
   }
 
-  public async status({ request }: HttpContextContract) {
+  public async status({request}: HttpContextContract) {
     const discordId = request.input('discordId');
     if (!discordId) {
-      return { status: 'error', message: 'ID Discord non fourni' };
+      return {status: 'error', message: 'ID Discord non fourni'};
     }
 
     const containerName = `TogetherSelf-${discordId}`;
 
-    const containers = await docker.listContainers({ all: true });
+    const containers = await docker.listContainers({all: true});
     const existingContainer = containers.find(container => container.Names && container.Names.includes('/' + containerName));
 
     if (!existingContainer) {
-      return { status: 'error', message: 'Aucun conteneur avec ce nom n\'existe' };
+      return {status: 'error', message: 'Aucun conteneur avec ce nom n\'existe'};
     }
 
     try {
@@ -206,7 +206,7 @@ export default class ContainersController {
       };
     } catch (error) {
       console.error(error);
-      return { status: 'error', message: 'Erreur lors de la récupération des statistiques du conteneur' };
+      return {status: 'error', message: 'Erreur lors de la récupération des statistiques du conteneur'};
     }
   }
 
@@ -230,20 +230,20 @@ export default class ContainersController {
     };
   }
 
-  public async execute({ request }: HttpContextContract) {
+  public async execute({request}: HttpContextContract) {
     const discordId = request.input('discordId');
     const action = request.input('action');
     if (!discordId || !action) {
-      return { status: 'error', message: 'ID Discord ou action non fourni' };
+      return {status: 'error', message: 'ID Discord ou action non fourni'};
     }
 
     const containerName = `TogetherSelf-${discordId}`;
 
-    const containers = await docker.listContainers({ all: true });
+    const containers = await docker.listContainers({all: true});
     const existingContainer = containers.find(container => container.Names && container.Names.includes('/' + containerName));
 
     if (!existingContainer) {
-      return { status: 'error', message: 'Aucun conteneur avec ce nom n\'existe' };
+      return {status: 'error', message: 'Aucun conteneur avec ce nom n\'existe'};
     }
 
     try {
@@ -254,28 +254,28 @@ export default class ContainersController {
       });
       redis.publish('channel-' + discordId, action);
 
-      return { status: 'success', message: 'Action exécutée avec succès' };
+      return {status: 'success', message: 'Action exécutée avec succès'};
     } catch (error) {
       console.error(error);
-      return { status: 'error', message: 'Erreur lors de l\'exécution de l\'action' };
+      return {status: 'error', message: 'Erreur lors de l\'exécution de l\'action'};
     }
   }
 
-  public async exists({ request }: HttpContextContract) {
+  public async exists({request}: HttpContextContract) {
     const discordId = request.input('discordId');
     if (!discordId) {
-      return { status: 'error', message: 'ID Discord non fourni' };
+      return {status: 'error', message: 'ID Discord non fourni'};
     }
 
     const containerName = `TogetherSelf-${discordId}`;
 
-    const containers = await docker.listContainers({ all: true });
+    const containers = await docker.listContainers({all: true});
     const existingContainer = containers.find(container => container.Names && container.Names.includes('/' + containerName));
 
     if (existingContainer) {
-      return { status: 'success', message: 'Un conteneur avec ce nom existe déjà' };
+      return {status: 'success', message: 'Un conteneur avec ce nom existe déjà'};
     } else {
-      return { status: 'error', message: 'Aucun conteneur avec ce nom n\'existe' };
+      return {status: 'error', message: 'Aucun conteneur avec ce nom n\'existe'};
     }
   }
 
@@ -285,8 +285,66 @@ export default class ContainersController {
       host: 'localhost',
       port: 6379
     });
-    const keys = await redis.pubsub('channels', 'channel-*');
-    const connectedIds = keys.map(key => key.split('-')[1]);
-    return { status: 'success', message: 'Liste des utilisateurs connectés récupérée', data: connectedIds };
+    try {
+      const keys = await redis.pubsub('channels', 'channel-*');
+      const connectedIds = keys.map(key => key.split('-')[1]);
+      return {status: 'success', message: 'Liste des utilisateurs connectés récupérée', data: connectedIds};
+    } finally {
+      redis.disconnect();
+    }
   }
+
+  public async dockerinfo() {
+    const containers = await docker.listContainers({all: true});
+    const containersLength = containers.length;
+
+    if (containersLength === 0) {
+      return {containersLength, averageRamUsageMB: null, averageCpuUsagePercent: null};
+    }
+
+    let totalRamUsageMB = 0;
+    let totalCpuUsagePercent = 0;
+
+    for (const containerInfo of containers) {
+      if (containerInfo.State !== 'running') {
+        continue;
+      }
+
+      const container = docker.getContainer(containerInfo.Id);
+      const stats = await new Promise((resolve, reject) => {
+        container.stats((error, stream) => {
+          if (error) {
+            reject(error);
+          } else {
+            container.modem.demuxStream(stream, process.stdout, process.stderr);
+            stream.on('data', (data) => {
+              const stats = JSON.parse(data.toString());
+              if (stats && stats.cpu_stats && stats.memory_stats) {
+                resolve(stats);
+              } else {
+                resolve(null);
+              }
+              stream.destroy();
+            });
+          }
+        });
+      });
+
+      if (stats) {
+        // @ts-ignore
+        const cpuUsagePercent = ((stats.cpu_stats.cpu_usage.total_usage / stats.cpu_stats.system_cpu_usage) * 100).toFixed(2);
+        // @ts-ignore
+        const memoryUsageMB = (stats.memory_stats.usage / (1024 * 1024)).toFixed(2);
+
+        totalRamUsageMB += parseFloat(memoryUsageMB);
+        totalCpuUsagePercent += parseFloat(cpuUsagePercent);
+      }
+    }
+
+    const averageRamUsageMB = totalRamUsageMB / containersLength;
+    const averageCpuUsagePercent = totalCpuUsagePercent / containersLength;
+
+    return {containersLength, averageRamUsageMB, averageCpuUsagePercent};
+  }
+
 }

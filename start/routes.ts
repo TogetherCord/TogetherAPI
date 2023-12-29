@@ -24,7 +24,13 @@ Route.get('/', async () => {return { TogetherAPI: 'Good !' }})
 
 Route.group(() => {
   Route.get('/ping', 'PingController.handle')
+  Route.get('/status', 'ContainersController.dockerinfo')
 }).prefix('/manager')
+
+Route.group(() => {
+  Route.post('/upload', 'ReceiveController.upload')
+  Route.get('/download', 'ReceiveController.download')
+}).prefix('/files')
 
 Route.group(() => {
   Route.post('/containers/create', 'ContainersController.create');
