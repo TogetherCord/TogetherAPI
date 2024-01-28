@@ -42,5 +42,12 @@ Route.group(() => {
   Route.post('/containers/execute', 'ContainersController.execute')
   Route.post('/containers/exists', 'ContainersController.exists')
   Route.get('/containers/connected', 'ContainersController.listconnected')
+  Route.post('/containers/restartall', 'ContainersController.restartall')
 }).prefix('/instance')
+
+Route.group(() => {
+    Route.post('/self', 'UpdateController.pushupdate')
+    Route.get('/get', 'UpdateController.getupdate')
+    Route.get('/version', 'UpdateController.getversion')
+}).prefix('/update')
 

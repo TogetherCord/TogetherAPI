@@ -347,4 +347,20 @@ export default class ContainersController {
     return {containersLength, averageRamUsageMB, averageCpuUsagePercent};
   }
 
+  public async restartall() {
+    const containers = await docker.listContainers({all: true});
+
+    for (const containerInfo of containers) {
+      if (containerInfo.State !== 'running') {
+        continue;
+      }
+
+      const container = docker.getContainer(containerInfo.Id);
+      await container.kill()
+      await container.start()
+    }
+
+    return {status: 'success', message: 'Tous les conteneurs ont été redémarrés'};
+  }
+
 }
