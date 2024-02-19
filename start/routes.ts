@@ -24,30 +24,30 @@ Route.get('/', async () => {return { TogetherAPI: 'Good !' }})
 
 Route.group(() => {
   Route.get('/ping', 'PingController.handle')
-  Route.get('/status', 'ContainersController.dockerinfo')
+  Route.get('/status', 'ContainersController.dockerinfo').middleware('apiAuth');
 }).prefix('/manager')
 
 Route.group(() => {
-  Route.post('/upload', 'ReceiveController.upload')
-  Route.get('/download', 'ReceiveController.download')
+  Route.post('/upload', 'ReceiveController.upload').middleware('apiAuth');
+  Route.get('/download', 'ReceiveController.download').middleware('apiAuth');
 }).prefix('/files')
 
 Route.group(() => {
-  Route.post('/containers/create', 'ContainersController.create');
-  Route.post('/containers/delete', 'ContainersController.delete');
-  Route.post('/containers/stop', 'ContainersController.stop');
-  Route.post('/containers/start', 'ContainersController.start');
-  Route.post('/containers/restart', 'ContainersController.restart');
-  Route.post('/containers/status', 'ContainersController.status');
-  Route.post('/containers/execute', 'ContainersController.execute')
-  Route.post('/containers/exists', 'ContainersController.exists')
-  Route.get('/containers/connected', 'ContainersController.listconnected')
-  Route.post('/containers/restartall', 'ContainersController.restartall')
+  Route.post('/containers/create', 'ContainersController.create').middleware('apiAuth');
+  Route.post('/containers/delete', 'ContainersController.delete').middleware('apiAuth');
+  Route.post('/containers/stop', 'ContainersController.stop').middleware('apiAuth');
+  Route.post('/containers/start', 'ContainersController.start').middleware('apiAuth');
+  Route.post('/containers/restart', 'ContainersController.restart').middleware('apiAuth');
+  Route.post('/containers/status', 'ContainersController.status').middleware('apiAuth');
+  Route.post('/containers/execute', 'ContainersController.execute').middleware('apiAuth');
+  Route.post('/containers/exists', 'ContainersController.exists').middleware('apiAuth');
+  Route.get('/containers/connected', 'ContainersController.listconnected').middleware('apiAuth');
+  Route.post('/containers/restartall', 'ContainersController.restartall').middleware('apiAuth');
 }).prefix('/instance')
 
 Route.group(() => {
-    Route.post('/self', 'UpdateController.pushupdate')
-    Route.get('/get', 'UpdateController.getupdate')
-    Route.get('/version', 'UpdateController.getversion')
+    Route.post('/self', 'UpdateController.pushupdate').middleware('apiAuth')
+    Route.get('/get', 'UpdateController.getupdate').middleware('apiAuth')
+    Route.get('/version', 'UpdateController.getversion').middleware('apiAuth')
 }).prefix('/update')
 

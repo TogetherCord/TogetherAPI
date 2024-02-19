@@ -7,6 +7,7 @@ export default class PingController {
     const start = DateTime.now();
     const end = DateTime.now();
     const duration = end.diff(start, 'milliseconds');
+
     return response.send({ status: 'pong', duration: duration.milliseconds });
   }
 }
