@@ -43,6 +43,7 @@ Route.group(() => {
   Route.post('/containers/exists', 'ContainersController.exists').middleware('apiAuth');
   Route.get('/containers/connected', 'ContainersController.listconnected').middleware('apiAuth');
   Route.post('/containers/restartall', 'ContainersController.restartall').middleware('apiAuth');
+  Route.get('/containers/list', 'ContainersController.howmanyuser').middleware('apiAuth');
 }).prefix('/instance')
 
 Route.group(() => {

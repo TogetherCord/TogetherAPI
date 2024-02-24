@@ -363,4 +363,12 @@ export default class ContainersController {
     return {status: 'success', message: 'Tous les conteneurs ont été redémarrés'};
   }
 
+  public async howmanyuser(){
+    const containerName = `/TogetherSelf-`;
+
+    const containers = await docker.listContainers({all: true});
+    const togethercordInstances = containers.filter(container => container.Names && container.Names.some(name => name.startsWith(containerName)));
+    return {status: 'success', message: 'Nombre de Instance récupéré', data: togethercordInstances.length};
+  }
+
 }
