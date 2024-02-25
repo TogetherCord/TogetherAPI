@@ -23,7 +23,7 @@ export default class ExceptionHandler extends HttpExceptionHandler {
 
   public async handle (error, ctx) {
     if (error.code === 'E_ROUTE_NOT_FOUND') {
-      return ctx.response.status(404).send({ message: 'Route not found >:(' })
+      return ctx.response.status(404).send({ message: 'Route not found >:( | But if you dont find the routes, that mean u try to steal endpoint, so get away skript kiddies :0' })
     }
   }
 }
