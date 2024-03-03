@@ -282,7 +282,7 @@ export default class ContainersController {
   public async listconnected() {
     const Redis = require('ioredis');
     const redis = new Redis({
-      host: '172.17.0.4',
+      host: 'localhost',
       port: 6379
     });
     try {
